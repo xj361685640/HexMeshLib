@@ -4,9 +4,14 @@
 Hex::Hex(int id, int index, HexVertex *vers[8], std::string& property)
 : m_id(id), m_index(index), m_property(property) 
 {
+	
 	for (int i = 0; i < 8; ++i) {
 		m_vers[i] = vers[i];
+		m_center += vers[i]->point();
 	}
+
+	m_center /= 8.0;
+
 	static int fv_order[][4] = {
 		1, 0, 4, 5,
 		3, 1, 5, 7,

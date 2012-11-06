@@ -2,6 +2,7 @@
 #define Hex_h__
 
 #include <string>
+#include "Point.h"
 
 class HexVertex;
 class HalfQuad;
@@ -15,9 +16,10 @@ public:
 	int id() { return m_id; }
 	int& index() { return m_index; }
 	HexVertex *vertex(int i) { return m_vers[i]; }
+
 	std::string& property() { return m_property; }
 	HalfQuad *halfquad(int i) { return m_halfquads[i]; }
-
+	Point center() { return m_center; }
 private:
 	HalfQuad *createHalfQuad(HexVertex *vers[4]);
 private:
@@ -26,6 +28,6 @@ private:
 	HexVertex *m_vers[8];		
 	HalfQuad *m_halfquads[6];
 	std::string m_property;
-	
+	Point m_center;	
 };
 #endif // Hex_h__
