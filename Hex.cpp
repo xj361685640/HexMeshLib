@@ -1,8 +1,9 @@
 #include "Hex.h"
+#include "HexVertex.h"
 #include "HalfQuad.h"
 
 Hex::Hex(int id, int index, HexVertex *vers[8], std::string& property)
-: m_id(id), m_index(index), m_property(property) 
+: m_id(id), m_index(index), m_property(property),  m_boundary(false)
 {
 	
 	for (int i = 0; i < 8; ++i) {
@@ -22,13 +23,13 @@ Hex::Hex(int id, int index, HexVertex *vers[8], std::string& property)
 	};
 
 
-	for (size_t i = 0; i < 6; ++i) {
+	for (int i = 0; i < MAX_ORIENTATION; ++i) {
 		HexVertex *vers[4];
 		for (int j = 0; j < 4; ++j) {
 			vers[j] = m_vers[fv_order[i][j]];
 		}
 
-		HalfQuad *halfquad = createHalfQuad(vers);
+		HalfQuad *halfquad = new HalfQuad(vers, ORIENTATION(i));
 		m_halfquads[i] = halfquad;
 		halfquad->hex() = this;
 	}
@@ -38,7 +39,3 @@ Hex::~Hex() {
 
 }
 
-
-HalfQuad * Hex::createHalfQuad(HexVertex *vers[4]) {
-	return new HalfQuad(vers);
-}

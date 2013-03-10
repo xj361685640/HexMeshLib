@@ -3,6 +3,7 @@
 
 #include "HalfQuad.h"
 #include <algorithm>
+#include <map>
 
 
 typedef std::pair<int, int> pairint;
@@ -27,5 +28,44 @@ inline quadlet construct_quad(HalfQuad *halfquad) {
 }
 
 
+inline void growing(std::vector<HalfQuad *> & halfquads, ORIENTATION o) {
+	std::map<HalfQuad *, bool> visitMap;
+
+	for (size_t i = 0; i < halfquads.size(); ++i) {
+		HalfQuad *halfquad = halfquads[i];
+		visitMap[halfquad] = true;
+	}
+		std::vector<HalfQuad *> front = halfquads;
+
+	do {
+		std::vector<HalfQuad*> newfront;
+		for (size_t i = 0; i < front.size(); ++i) {
+			HalfQuad *halfquad = halfquads[i];
+			for (int j = 0; j < 4; ++j) {
+				HexEdge *hedge = halfquad->quad()->hexedge(j);
+				std::vector<Quad*>& nquads = hedge->quads();
+				for (int k = 0; k < nquads.size(); ++k) {
+					Quad *quad = nquads[k];
+					for (int l = 0; l < 2; ++l) {
+						HalfQuad *nextquad = quad->halfquad(l);
+						if (!nextquad) {
+							continue;
+						}
+						if (nextquad->orientation() != o) {
+							continue;
+						}
+						if (visitMap[nextquad]) {
+							continue;		
+						}
+						newfront.push_back(nextquad);
+						halfquads.push_back(nextquad);
+						visitMap[nextquad] = true;
+					}
+				}
+			}
+		}
+		front = newfront;
+	} while(!front.empty());
+}
 
 #endif // HexMeshUtils_h__

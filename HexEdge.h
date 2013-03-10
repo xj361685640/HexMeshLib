@@ -14,7 +14,8 @@ public:
 	void add(Quad* quad) {
 		m_quads.push_back(quad);
 	}
-
+	std::vector<Quad*>& quads() { return m_quads; }
+	
 	HexVertex *vertex(int i) { return m_vers[i]; }
 private:
 	std::vector<Quad*> m_quads;
